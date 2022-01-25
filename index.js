@@ -1668,10 +1668,10 @@ async function load_resources() {
 	document.body.style.color = "red";
 	return;*/
 
-	git_src="https://akukamil.github.io/6words/"
-	//git_src=""
+	//git_src="https://akukamil.github.io/6words/"
+	git_src=""
 
-
+	
 	game_res=new PIXI.Loader();
 	game_res.add("m2_font", git_src+"fonts/Neucha/font.fnt");
 	game_res.add("m3_font", git_src+"fonts/Muffin/font.fnt");
