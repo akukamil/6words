@@ -915,6 +915,8 @@ var game = {
 		//показыаем диалог
 		res = await bm.add(fin_text);
 				
+		//показываем рекламу
+		await show_ad();
 		
 		if (res === 'exit') {
 			this.close();
@@ -967,23 +969,32 @@ var keep_alive = function() {
 	firebase.database().ref("players/"+my_data.uid+"/tm").set(firebase.database.ServerValue.TIMESTAMP);
 }
 
-var	show_ad = function(){
+var	show_ad = async function(){
 		
 	if (game_platform==="YANDEX") {			
 		//показываем рекламу
-		window.ysdk.adv.showFullscreenAdv({
-		  callbacks: {
-			onClose: function() {}, 
-			onError: function() {}
-					}
+		
+		
+		
+		await new Promise((resolve, reject)=> {
+			
+			window.ysdk.adv.showFullscreenAdv({
+			  callbacks: {
+				onClose: resolve, 
+				onError: resolve
+						}
+			})			
+			
 		})
+		
+		
+
 	}
 	
 	if (game_platform==="VK") {
 				 
-		vkBridge.send("VKWebAppShowNativeAds", {ad_format:"interstitial"})
-		.then(data => console.log(data.result))
-		.catch(error => console.log(error));	
+		await vkBridge.send("VKWebAppShowNativeAds", {ad_format:"interstitial"})
+	
 	}		
 }
 
