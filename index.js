@@ -41,7 +41,7 @@ class lb_player_card_class extends PIXI.Container{
 
 
 		this.rating=new PIXI.BitmapText('', {fontName: 'mfont',fontSize: 25});
-		this.rating.x=298;
+		this.rating.x=340;
 		this.rating.tint=0xffffff;
 		this.rating.y=22;
 
@@ -98,20 +98,35 @@ class keyboard_class extends PIXI.Container {
 		
 		this.back_button =  new PIXI.Sprite(gres.back_button_image.texture);
 		this.back_button.x=0;
-		this.back_button.y=0;
 		this.back_button.interactive=true;
 		this.back_button.buttonMode=true;
-		this.back_button.pointerdown = function(){this.back_button.tint=0x999999}.bind(this);
+		this.back_button.pointerdown = function(){this.back_button.tint=0x888888}.bind(this);
+		this.back_button.pointerover= function(){this.back_button.tint=0x999999}.bind(this);
 		this.back_button.pointerup = function(){game.delete();this.back_button.tint=0xffffff}.bind(this);
+		this.back_button.pointerout = function(){this.back_button.tint=0xffffff}.bind(this);
 		this.addChild(this.back_button);
 		
 		this.enter_button =  new PIXI.Sprite(gres.enter_button_image.texture);
 		this.enter_button.x = 320;
 		this.enter_button.interactive=true;
 		this.enter_button.buttonMode=true;
-		this.enter_button.pointerdown = function(){this.enter_button.tint=0x999999}.bind(this);
+		this.enter_button.pointerdown = function(){this.enter_button.tint=0x888888}.bind(this);
+		this.enter_button.pointerover= function(){this.enter_button.tint=0x999999}.bind(this);
 		this.enter_button.pointerup = function(){game.check();this.enter_button.tint=0xffffff}.bind(this);
+		
+		this.enter_button.pointerout = function(){this.enter_button.tint=0xffffff}.bind(this);
 		this.addChild(this.enter_button);
+		
+		this.bonus_row_button =  new PIXI.Sprite(gres.add_bonus_row.texture);
+		this.bonus_row_button.x = 165;
+		this.bonus_row_button.interactive=true;
+		this.bonus_row_button.buttonMode=true;
+		this.bonus_row_button.pointerdown = function(){this.bonus_row_button.tint=0x888888}.bind(this);
+		this.bonus_row_button.pointerover= function(){this.bonus_row_button.tint=0x999999}.bind(this);
+		this.bonus_row_button.pointerup = function(){game.add_bonus_row();this.bonus_row_button.tint=0xffffff}.bind(this);
+		this.bonus_row_button.pointerout = function(){this.bonus_row_button.tint=0xffffff}.bind(this);
+		this.addChild(this.bonus_row_button);
+		
 		
 		for (let i = 0 ; i < 11 ; i++) {
 			let key = new PIXI.Sprite(gres.key_image.texture);
@@ -557,7 +572,7 @@ var mm ={
 	
 	promise_resolve :0,
 	
-	 add : async function(text) {
+	add : async function(text) {
 		
 		if (this.promise_resolve!==0)
 			this.promise_resolve("forced");
@@ -601,6 +616,8 @@ var bm = {
 		
 		if (objects.bm_cont.ready===false)
 			return;
+		
+		gres.click.sound.play();
 
 		anim2.add(objects.bm_cont,{y:[objects.bm_cont.sy,450]}, false, 0.4,'easeInBack');		
 		this.p_resolve("exit");			
@@ -610,6 +627,8 @@ var bm = {
 		
 		if (objects.bm_cont.ready===false)
 			return;
+		
+		gres.click.sound.play();
 
 		anim2.add(objects.bm_cont,{y:[objects.bm_cont.sy,450]}, false, 0.4,'easeInBack');		
 		this.p_resolve("ok");			
@@ -648,8 +667,11 @@ var game = {
 	cur_pos : -1,
 	word:'',	
 	checking:0,
+	max_level:5,
 	
 	activate: function() {
+		
+		gres.game_start.sound.play();
 				
 		anim2.add(objects.cells_cont,{y:[-500,objects.cells_cont.sy],alpha:[0,1]}, true, 1,'easeOutQuad');
 		anim2.add(objects.keyboard,{y:[800,objects.keyboard.sy],alpha:[0,1]}, true, 0.5,'easeOutQuad');
@@ -661,7 +683,7 @@ var game = {
 		if (punish_rating<0) punish_rating = 0;		
 		firebase.database().ref("players/"+my_data.uid+"/rating").set(punish_rating);
 		
-		objects.header_text.text='Баланс: '+my_data.rating;
+		objects.header_text.text='Баланс: '+my_data.rating + '$';
 		
 		objects.keyboard.visible = true;
 		objects.keyboard.clear();
@@ -675,24 +697,78 @@ var game = {
 		this.cur_word="";
 		this.cur_level=0;
 		this.checking=0;
-				
+		this.max_level=5;
 		
-		objects.cells.forEach(c=>{
-			c.bcg.visible = true;
-			c.bcg2.visible = false;
-			c.letter.text='';
-		})	
+		//показываем бонус
+		if (my_data.bonus >0)
+			objects.keyboard.bonus_row_button.visible=true;
+		else
+			objects.keyboard.bonus_row_button.visible=false;
+			
+				
+		//это главные ячейки
+		for (let c=0;c<30;c++) {
+			objects.cells[c].bcg.visible = true;
+			objects.cells[c].bcg2.visible = false;
+			objects.cells[c].letter.text='';
+		}		
+		
+		//дополнительные ячейки пока скрываем
+		for (let c=30;c<35;c++) {
+			objects.cells[c].bcg.visible = false;
+			objects.cells[c].bcg2.visible = false;
+			objects.cells[c].letter.text='';
+		}	
 	},	
+	
+	add_bonus_row : async function() {
+		
+		if (this.checking === 1 || objects.bm_cont.visible===true || objects.keyboard.bonus_row_button.ready === false || objects.cells_cont.ready === false)
+			return;
+		
+		//обновляем количество бонусов
+		my_data.bonus--;
+		firebase.database().ref("players/"+my_data.uid+"/bonus").set(my_data.bonus);	
+		
+		anim2.add(objects.keyboard.bonus_row_button,{alpha:[1,0]}, false, 0.5,'linear');
+		
+		await anim2.add(objects.cells_cont,{y:[objects.cells_cont.y,objects.cells_cont.sy-30]}, true, 1,'easeInOutCubic');
+		
+		//дополнительные ячейки пока скрываем
+		for (let c=30;c<35;c++) {			
+			objects.cells[c].bcg.visible = true;
+			anim2.add(objects.cells[c].bcg,{alpha:[0,1]}, true, 1,'linear');
+		}
+			
+		this.max_level=6;
+		
+		
+		
+
+	},
 
 	key_down : function(key) {
 		
-		
+	
 		if (objects.bm_cont.visible===true)
 			return;
 		
+		gres.key_down.sound.play();
+		
+		/*
+		if (key==='П') {			
+			this.finish('win');
+			return;
+		}
+		
+		if (key==='И') {			
+			this.finish('lose');
+			return;
+		}*/
 		
 		
 		if (this.cur_word.length===5) {
+			gres.mm.sound.play();
 			mm.add("Вы уже составили слово, нажмите ввод")
 			return;
 		}
@@ -713,13 +789,17 @@ var game = {
 		if (this.checking === 1 || objects.bm_cont.visible===true)
 			return;
 		
+		gres.click.sound.play();
+		
 		if (this.cur_word.length!==5) {
+			gres.mm.sound.play();
 			mm.add("Составте слово из 5 букв");
 			return;
 		}		
 		
 		if (rus_dict.includes(this.cur_word) === false) {
 			
+			gres.bad_word.sound.play();
 			mm.add("Такого слова нет в словаре");			
 			for (let i = 0 ; i < 5 ; i++)
 				objects.cells[this.cur_level*5+i].letter.text = '';
@@ -728,21 +808,9 @@ var game = {
 			return;			
 		}
 		
+		//проверка угадывания слова
 		if (this.word === this.cur_word) {
-			my_data.rating++;
-			my_data.games++;
-			firebase.database().ref("players/"+my_data.uid+"/rating").set(my_data.rating);
-			firebase.database().ref("players/"+my_data.uid+"/games").set(my_data.games);
-			objects.header_text.text='Баланс: '+my_data.rating;
-			
-			let res = await bm.add('Отгадали!\nВам начислен 1$\nСыграем еще?');
-			if (res === 'exit') {
-				this.close();
-				main_menu.activate();
-				return;			
-			}
-			
-			this.activate();
+			this.finish('win');
 			return;
 		}
 		
@@ -785,23 +853,15 @@ var game = {
 
 		}
 		
+		gres.good_word.sound.play();
+		
 		//это ожидание завершение всех анимаций
 		await anim2.add(objects.id_loup,{alpha:[0.5,1]}, true, 1,'linear');
 		
-		if (this.cur_level===5) {
-			
-			my_data.games++;
-			firebase.database().ref("players/"+my_data.uid+"/games").set(my_data.games);
-			
-			let res = await bm.add("Вы так и не угадали слово "+this.word + "\nзабрали у вас 1$\nМожет еще разок?")
-			if (res === 'exit') {
-				this.close();
-				main_menu.activate();
-				return;			
-			}
-			
-			this.activate();
-			return;			
+		//проверка достижения конечного уровня
+		if (this.cur_level===this.max_level) {
+			this.finish('lose');
+			return;	
 		}
 		
 		this.checking = 0;		
@@ -812,10 +872,67 @@ var game = {
 		
 	},	
 	
+	finish: async function(res) {
+		
+		let fin_text='';
+		
+		//увеличиваем количество игр
+		my_data.games++;
+		firebase.database().ref("players/"+my_data.uid+"/games").set(my_data.games);
+		
+		if (res==='win') {			
+			gres.win.sound.play();
+			//увеличиваем рейтинг
+			my_data.rating++;
+			firebase.database().ref("players/"+my_data.uid+"/rating").set(my_data.rating);		
+			fin_text='Отгадали!\nВам начислен 1$\nСыграем еще?';
+		}
+		
+		if (res==='lose') {
+			gres.lose.sound.play();
+			//уменьшаем рейтинг
+			my_data.rating > 0 ? my_data.rating--:0;
+			firebase.database().ref("players/"+my_data.uid+"/rating").set(my_data.rating);			
+			fin_text='Вы так и не угадали слово '+this.word + '\nзабрали у вас 1$\nМожет еще разок?';
+		}
+		
+		
+		if (my_data.games%10 === 0) {		
+			my_data.bonus++;
+			mm.add('Вам бонус: +1 ряд (Всего: '+my_data.bonus +')');				
+			firebase.database().ref("players/"+my_data.uid+"/bonus").set(my_data.bonus);	
+			
+		}
+
+		
+		
+		//обновляем строку рейтинга
+		objects.header_text.text='Баланс: '+my_data.rating +'$';
+		
+		//показыаем диалог
+		res = await bm.add(fin_text);
+				
+		
+		if (res === 'exit') {
+			this.close();
+			main_menu.activate();
+		}	
+		
+		if (res === 'ok') {
+			this.activate();
+		}		
+		
+	},
+	
 	delete : function () {
+		
+		
+		gres.click.sound.play();
+		
 		
 		if (this.cur_pos === -1 || this.checking === 1 || objects.bm_cont.visible===true)
 			return;
+				
 		
 		this.cur_word = this.cur_word.substring(0, this.cur_word.length - 1);
 				
@@ -942,6 +1059,8 @@ var main_menu = {
 
 		if (objects.main_buttons_cont.ready === false)
 			return;
+		
+		gres.click.sound.play();
 
 		await this.close();
 		game.activate();
@@ -950,7 +1069,12 @@ var main_menu = {
 
 	lb_button_down: function () {
 
+		if (objects.main_buttons_cont.ready === false)
+			return;
 
+		gres.click.sound.play();
+		
+		
 		this.close();
 		lb.activate();
 
@@ -958,21 +1082,19 @@ var main_menu = {
 
 	rules_button_down: function () {
 
-		if (any_dialog_active===1) {
-			gres.locked.sound.play();
-			return
-		};
+		if (objects.main_buttons_cont.ready === false)
+			return;
 
 		gres.click.sound.play();
 
 	
-		anim2.add(objects.rules_cont,{y:[-450, objects.rules_cont.sy]}, true, 1,'easeOutBack');
+		anim2.add(objects.rules_cont,{y:[-800, objects.rules_cont.sy]}, true, 1,'easeOutBack');
 
 	},
 
 	rules_ok_down: function () {
 		any_dialog_active=0;		
-		anim2.add(objects.rules_cont,{y:[objects.rules_cont.y,-450, ]}, false, 1,'easeInBack');
+		anim2.add(objects.rules_cont,{y:[objects.rules_cont.sy,800, ]}, false, 0.5,'easeInBack');
 	}
 
 }
@@ -1050,7 +1172,7 @@ var lb = {
 				var players_array = [];
 				snapshot.forEach(players_data=> {
 					if (players_data.val().name!=="" && players_data.val().name!=='' && players_data.val().name!==undefined)
-						players_array.push([players_data.val().name, players_data.val().record, players_data.val().pic_url]);
+						players_array.push([players_data.val().name, players_data.val().rating, players_data.val().pic_url]);
 				});
 
 
@@ -1089,7 +1211,7 @@ var lb = {
 
 					make_text(objects.lb_cards[i-3].name,fname,180);
 
-					objects.lb_cards[i-3].balance.text=players_array[i][1];
+					objects.lb_cards[i-3].rating.text=players_array[i][1];
 					loader.add('leaders_avatar_'+i, players_array[i][2],{loadType: PIXI.LoaderResource.LOAD_TYPE.IMAGE});
 				};
 
@@ -1393,6 +1515,11 @@ async function load_user_data() {
 		data===null ?
 			my_data.games = 0 :
 			my_data.games = data.games || 0;
+			
+		data===null ?
+			my_data.bonus = 0 :
+			my_data.bonus = data.bonus || 0;
+			
 
 		//устанавливаем рейтинг в попап
 		objects.id_rating.text=my_data.rating;
@@ -1402,7 +1529,7 @@ async function load_user_data() {
 		delete some_process.loup_anim;
 
 		//обновляем данные в файербейс так как могли поменяться имя или фото
-		firebase.database().ref("players/"+my_data.uid).set({name:my_data.name, pic_url: my_data.pic_url, rating : my_data.rating, games : my_data.games, tm:firebase.database.ServerValue.TIMESTAMP});
+		firebase.database().ref("players/"+my_data.uid).set({name:my_data.name, pic_url: my_data.pic_url, rating : my_data.rating, games : my_data.games, bonus : my_data.bonus, tm:firebase.database.ServerValue.TIMESTAMP});
 
 		//это событие когда меняется видимость приложения
 		document.addEventListener("visibilitychange", vis_change);
@@ -1564,7 +1691,7 @@ async function load_resources() {
 	game_res.add('cell_move',git_src+'/sounds/cell_move.mp3');
 	game_res.add('bad_move',git_src+'/sounds/bad_move.mp3');
 	game_res.add('win',git_src+'/sounds/win.mp3');
-	game_res.add('invite',git_src+'/sounds/invite.mp3');
+	game_res.add('mm',git_src+'/sounds/mm.mp3');
 	game_res.add('draw',git_src+'/sounds/draw.mp3');
 	
 	
