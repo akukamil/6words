@@ -972,23 +972,13 @@ var keep_alive = function() {
 var	show_ad = async function(){
 		
 	if (game_platform==="YANDEX") {			
-		//показываем рекламу
-		
-		
-		
-		await new Promise((resolve, reject)=> {
-			
-			window.ysdk.adv.showFullscreenAdv({
-			  callbacks: {
-				onClose: resolve, 
-				onError: resolve
-						}
-			})			
-			
-		})
-		
-		
 
+		//показываем рекламу		
+		await new Promise(resolve => {			
+			window.ysdk.adv.showFullscreenAdv({
+			  callbacks: {onClose: function(){resolve('ok')}, onError: function(){resolve('ok2')}}
+			})	
+		})
 	}
 	
 	if (game_platform==="VK") {
@@ -1682,8 +1672,8 @@ async function load_resources() {
 	document.body.style.color = "red";
 	return;*/
 
-	git_src="https://akukamil.github.io/6words/"
-	//git_src=""
+	//git_src="https://akukamil.github.io/6words/"
+	git_src=""
 
 	
 	game_res=new PIXI.Loader();
