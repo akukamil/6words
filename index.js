@@ -98,6 +98,7 @@ class keyboard_class extends PIXI.Container {
 		
 		this.back_button =  new PIXI.Sprite(gres.back_button_image.texture);
 		this.back_button.x=0;
+		this.back_button.y=3;
 		this.back_button.interactive=true;
 		this.back_button.buttonMode=true;
 		this.back_button.pointerdown = function(){this.back_button.tint=0x888888}.bind(this);
@@ -108,6 +109,7 @@ class keyboard_class extends PIXI.Container {
 		
 		this.enter_button =  new PIXI.Sprite(gres.enter_button_image.texture);
 		this.enter_button.x = 320;
+		this.enter_button.y=3;
 		this.enter_button.interactive=true;
 		this.enter_button.buttonMode=true;
 		this.enter_button.pointerdown = function(){this.enter_button.tint=0x888888}.bind(this);
@@ -119,6 +121,7 @@ class keyboard_class extends PIXI.Container {
 		
 		this.bonus_row_button =  new PIXI.Sprite(gres.add_bonus_row.texture);
 		this.bonus_row_button.x = 165;
+		this.bonus_row_button.y=3;
 		this.bonus_row_button.interactive=true;
 		this.bonus_row_button.buttonMode=true;
 		this.bonus_row_button.pointerdown = function(){this.bonus_row_button.tint=0x888888}.bind(this);
@@ -1668,8 +1671,8 @@ async function load_resources() {
 	document.body.style.color = "red";
 	return;*/
 
-	//git_src="https://akukamil.github.io/6words/"
-	git_src=""
+	git_src="https://akukamil.github.io/6words/"
+	//git_src=""
 
 	
 	game_res=new PIXI.Loader();
