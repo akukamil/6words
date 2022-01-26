@@ -1033,7 +1033,7 @@ var social_dialog = {
 		
 		gres.click.sound.play();
 		vkBridge.send('VKWebAppShowWallPostBox', {"message": `Мой результат в игре 6 слов ${my_data.rating}$. Сможешь обогнать меня?`,
-		"attachments": "https://vk.com/app8044184"});
+		"attachments": "https://vk.com/app8061543"});
 		social_dialog.close();
 	},
 	
