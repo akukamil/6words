@@ -1683,20 +1683,13 @@ async function load_resources() {
 
 	game_res.add('click',git_src+'/sounds/click.mp3');
 	game_res.add('locked',git_src+'/sounds/locked.mp3');
-	game_res.add('clock',git_src+'/sounds/clock.mp3');
-	game_res.add('close_it',git_src+'/sounds/close_it.mp3');
 	game_res.add('game_start',git_src+'/sounds/game_start.mp3');
 	game_res.add('lose',git_src+'/sounds/lose.mp3');
-	game_res.add('receive_move',git_src+'/sounds/receive_move.mp3');
 	game_res.add('bad_word',git_src+'/sounds/bad_word.mp3');
 	game_res.add('good_word',git_src+'/sounds/good_word.mp3');
 	game_res.add('key_down',git_src+'/sounds/key_down.mp3');
-	game_res.add('cell_down',git_src+'/sounds/cell_down.mp3');
-	game_res.add('cell_move',git_src+'/sounds/cell_move.mp3');
-	game_res.add('bad_move',git_src+'/sounds/bad_move.mp3');
 	game_res.add('win',git_src+'/sounds/win.mp3');
 	game_res.add('mm',git_src+'/sounds/mm.mp3');
-	game_res.add('draw',git_src+'/sounds/draw.mp3');
 	
 	
     //добавляем из листа загрузки
