@@ -120,7 +120,7 @@ class keyboard_class extends PIXI.Container {
 		this.addChild(this.enter_button);
 		
 		this.bonus_row_button =  new PIXI.Sprite(gres.add_bonus_row.texture);
-		this.bonus_row_button.x = 165;
+		this.bonus_row_button.x = 150;
 		this.bonus_row_button.y=3;
 		this.bonus_row_button.interactive=true;
 		this.bonus_row_button.buttonMode=true;
