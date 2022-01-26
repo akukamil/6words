@@ -1,5 +1,5 @@
 var M_WIDTH=450, M_HEIGHT=800;
-var app, game_res, objects={}, state="", game_tick=0, git_src;
+var app, game_res, objects={}, state="", game_tick=0, git_src, user_data=0;
 var h_state=0, game_platform="", hidden_state_start = 0;
 var rus_let = 'ЙЦУКЕНГШЩЗХФЫВАПРОЛДЖЭЯЧСМИТЬБЮ';
 
@@ -622,7 +622,7 @@ var bm = {
 		
 		gres.click.sound.play();
 
-		anim2.add(objects.bm_cont,{y:[objects.bm_cont.sy,450]}, false, 0.4,'easeInBack');		
+		anim2.add(objects.bm_cont,{y:[objects.bm_cont.sy,800]}, false, 0.4,'easeInBack');		
 		this.p_resolve("exit");			
 	},
 	
@@ -633,7 +633,7 @@ var bm = {
 		
 		gres.click.sound.play();
 
-		anim2.add(objects.bm_cont,{y:[objects.bm_cont.sy,450]}, false, 0.4,'easeInBack');		
+		anim2.add(objects.bm_cont,{y:[objects.bm_cont.sy,800]}, false, 0.4,'easeInBack');		
 		this.p_resolve("ok");			
 	}
 
@@ -933,16 +933,15 @@ var game = {
 		//показываем рекламу
 		await show_ad();
 		
-		anim2.add(objects.cells_cont,{y:[objects.cells_cont.sy,-800],alpha:[1,0]}, false, 1,'linear');
-		await anim2.add(objects.keyboard,{y:[objects.keyboard.sy,800],alpha:[1,0]}, false, 0.5,'linear');
-		
+	
 		
 		if (res === 'exit') {
-			this.close();
+			await this.close();
 			main_menu.activate();
 		}	
 		
 		if (res === 'ok') {
+			await this.close();			
 			this.activate();
 		}		
 		
@@ -969,11 +968,11 @@ var game = {
 		
 	},
 
-	close : function() {
+	close : async function() {
 		
-		anim2.add(objects.cells_cont,{y:[objects.cells_cont.sy,-500],alpha:[1,0]}, false, 1,'linear');
+		anim2.add(objects.cells_cont,{y:[objects.cells_cont.sy,-500],alpha:[1,0]}, false, 0.5,'linear');
 		anim2.add(objects.keyboard,{y:[objects.keyboard.sy,800],alpha:[1,0]}, false, 0.5,'linear');
-		anim2.add(objects.header_cont,{y:[objects.header_cont.sy,-50],alpha:[1,0]}, false, 0.5,'linear');
+		await anim2.add(objects.header_cont,{y:[objects.header_cont.sy,-50],alpha:[1,0]}, false, 0.5,'linear');
 		
 	},
 	
@@ -1080,7 +1079,7 @@ var main_menu = {
 
 	play_button_down: async function () {
 
-		if (objects.main_buttons_cont.ready === false)
+		if (objects.main_buttons_cont.ready === false || user_data === 0)
 			return;
 		
 		gres.click.sound.play();
@@ -1464,7 +1463,7 @@ var auth = function() {
 				firebase.database().ref("players/"+my_data.uid+"/name").set(my_data.name);
 				firebase.database().ref("players/"+my_data.uid+"/pic_url").set(my_data.pic_url);
 				firebase.database().ref("players/"+my_data.uid+"/tm").set(firebase.database.ServerValue.TIMESTAMP);
-
+				user_data=1;
 				//вызываем коллбэк
 				resolve("ok");
 			}
