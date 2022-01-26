@@ -1604,7 +1604,7 @@ async function init_game_env() {
 	app = new PIXI.Application({width:M_WIDTH, height:M_HEIGHT,antialias:false,backgroundColor : 0x56536D});
 	let c = document.body.appendChild(app.view);
 	c.style["boxShadow"] = "0 0 15px #000000";
-	document.body.style.backgroundColor = 'rgb(' + 32 + ',' + 36 + ',' + 50 + ')';;
+	document.body.style.backgroundColor = 'rgb(' + 32 + ',' + 36 + ',' + 50 + ')';
 
 
 
@@ -1729,7 +1729,11 @@ async function load_resources() {
 }
 
 function main_loop() {
-
+	
+	
+//app.ticker.maxFPS=30;
+  app.ticker.add((delta) => {
+	  
 	//обрабатываем время
 	game_tick+=0.016666666;
 	
@@ -1740,9 +1744,13 @@ function main_loop() {
 	//обрабатываем минипроцессы
 	for (let key in some_process)
 		some_process[key]();
+	
+  });
+	
+
 
 	//запрашиваем следующий фрейм
-	requestAnimationFrame(main_loop);
+	//requestAnimationFrame(main_loop);
 }
 
 
