@@ -761,7 +761,7 @@ var game = {
 		
 		gres.key_down.sound.play();
 		
-		
+		/*
 		if (key==='П') {			
 			this.finish('win');
 			return;
@@ -770,7 +770,7 @@ var game = {
 		if (key==='И') {			
 			this.finish('lose');
 			return;
-		}
+		}*/
 		
 		
 		if (this.cur_word.length===5) {
