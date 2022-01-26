@@ -671,6 +671,7 @@ var game = {
 	word:'',	
 	checking:0,
 	max_level:5,
+	finished:0,
 	
 	activate: function() {
 		
@@ -701,6 +702,8 @@ var game = {
 		this.cur_level=0;
 		this.checking=0;
 		this.max_level=5;
+		this.finished=0;
+		
 		
 		//показываем бонус
 		if (my_data.bonus >0)
@@ -789,7 +792,7 @@ var game = {
 	check : async function () {
 		
 		
-		if (this.checking === 1 || objects.bm_cont.visible===true)
+		if (this.checking === 1 || objects.bm_cont.visible===true || this.finished===1)
 			return;
 		
 		gres.click.sound.play();
@@ -877,10 +880,9 @@ var game = {
 	
 	finish: async function(res) {
 		
-		//убираем клавиатуру
-		anim2.add(objects.keyboard,{y:[objects.keyboard.sy,800],alpha:[1,0]}, false, 0.5,'easeOutQuad');
-		
+	
 		let fin_text='';
+		this.finished=1;
 		
 		//увеличиваем количество игр
 		my_data.games++;
