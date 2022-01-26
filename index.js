@@ -1463,7 +1463,7 @@ var auth = function() {
 				firebase.database().ref("players/"+my_data.uid+"/name").set(my_data.name);
 				firebase.database().ref("players/"+my_data.uid+"/pic_url").set(my_data.pic_url);
 				firebase.database().ref("players/"+my_data.uid+"/tm").set(firebase.database.ServerValue.TIMESTAMP);
-				user_data=1;
+				
 				//вызываем коллбэк
 				resolve("ok");
 			}
@@ -1549,7 +1549,8 @@ async function load_user_data() {
 		//убираем лупу и ее анимацию
 		objects.id_loup.visible=false;
 		delete some_process.loup_anim;
-
+		user_data=1;
+		
 		//обновляем данные в файербейс так как могли поменяться имя или фото
 		firebase.database().ref("players/"+my_data.uid).set({name:my_data.name, pic_url: my_data.pic_url, rating : my_data.rating, games : my_data.games, bonus : my_data.bonus, tm:firebase.database.ServerValue.TIMESTAMP});
 
