@@ -919,14 +919,14 @@ var game = {
 		//обновляем строку рейтинга
 		objects.header_text.text='Баланс: '+my_data.rating +'$';
 		
-		if (platform === 'VK')
+		if (game_platform === 'VK')
 			anim2.add(objects.social_cont,{y:[-150,objects.social_cont.sy],alpha:[0,1]}, true, 0.5,'linear');
 		
 		
 		//показыаем диалог
 		res = await bm.add(fin_text);
 		
-		if (platform === 'VK')
+		if (game_platform === 'VK')
 			anim2.add(objects.social_cont,{y:[objects.social_cont.sy,-150,],alpha:[1,0]}, false, 0.5,'linear');
 		
 				
