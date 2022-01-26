@@ -919,9 +919,14 @@ var game = {
 		
 		//показыаем диалог
 		res = await bm.add(fin_text);
+		
 				
 		//показываем рекламу
 		await show_ad();
+		
+		anim2.add(objects.cells_cont,{y:[objects.cells_cont.sy,-800],alpha:[1,0]}, false, 1,'linear');
+		await anim2.add(objects.keyboard,{y:[objects.keyboard.sy,800],alpha:[1,0]}, false, 0.5,'linear');
+		
 		
 		if (res === 'exit') {
 			this.close();
