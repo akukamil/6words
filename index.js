@@ -877,6 +877,9 @@ var game = {
 	
 	finish: async function(res) {
 		
+		//убираем клавиатуру
+		anim2.add(objects.keyboard,{y:[objects.keyboard.sy,800],alpha:[1,0]}, false, 0.5,'easeOutQuad');
+		
 		let fin_text='';
 		
 		//увеличиваем количество игр
