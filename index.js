@@ -761,7 +761,7 @@ var game = {
 		
 		gres.key_down.sound.play();
 		
-		/*
+		
 		if (key==='П') {			
 			this.finish('win');
 			return;
@@ -770,7 +770,7 @@ var game = {
 		if (key==='И') {			
 			this.finish('lose');
 			return;
-		}*/
+		}
 		
 		
 		if (this.cur_word.length===5) {
@@ -794,6 +794,8 @@ var game = {
 		
 		if (this.checking === 1 || objects.bm_cont.visible===true || this.finished===1)
 			return;
+		
+		
 		
 		gres.click.sound.play();
 		
@@ -917,8 +919,15 @@ var game = {
 		//обновляем строку рейтинга
 		objects.header_text.text='Баланс: '+my_data.rating +'$';
 		
+		if (platform === 'VK')
+			anim2.add(objects.social_cont,{y:[-150,objects.social_cont.sy],alpha:[0,1]}, true, 0.5,'linear');
+		
+		
 		//показыаем диалог
 		res = await bm.add(fin_text);
+		
+		if (platform === 'VK')
+			anim2.add(objects.social_cont,{y:[objects.social_cont.sy,-150,],alpha:[1,0]}, false, 0.5,'linear');
 		
 				
 		//показываем рекламу
@@ -1024,7 +1033,7 @@ var social_dialog = {
 			return;
 		
 		gres.click.sound.play();
-		vkBridge.send('VKWebAppShowWallPostBox', {"message": `Мой рейтинг в игре Балда ${my_data.rating}. Сможешь победить меня?`,
+		vkBridge.send('VKWebAppShowWallPostBox', {"message": `Мой результат в игре 6 слов ${my_data.rating}$. Сможешь обогнать меня?`,
 		"attachments": "https://vk.com/app8044184"});
 		social_dialog.close();
 	},
