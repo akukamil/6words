@@ -1319,27 +1319,35 @@ var auth = function() {
 				else
 				{
 					//если sdk яндекса найден
-					let ysdk = await YaGames.init({});
+					YaGames.init({}).then(ysdk => {
 
-					//фиксируем SDK в глобальной переменной
-					window.ysdk=ysdk;
+						//фиксируем SDK в глобальной переменной
+						window.ysdk=ysdk;
 
-					//запрашиваем данные игрока
-					let _player = await ysdk.getPlayer();
-
-					my_data.name 	= _player.getName();
-					my_data.uid 	= _player.getUniqueID().replace(/\//g, "Z");
-					my_data.pic_url = _player.getPhoto('medium');
-
-					//console.log(`Получены данные игрока от яндекса:\nимя:${my_data.name}\nid:${my_data.uid}\npic_url:${my_data.pic_url}`);
-
-					//если личные данные не получены то берем первые несколько букв айди
-					if (my_data.name=="" || my_data.name=='')
-						my_data.name=my_data.uid.substring(0,5);
-
-					help_obj.process_results();
+						//запрашиваем данные игрока
+						return ysdk.getPlayer();
 
 
+					}).then((_player)=>{
+
+						my_data.name 	= _player.getName();
+						my_data.uid 	= _player.getUniqueID().replace(/\//g, "Z");
+						my_data.pic_url = _player.getPhoto('medium');
+
+						//console.log(`Получены данные игрока от яндекса:\nимя:${my_data.name}\nid:${my_data.uid}\npic_url:${my_data.pic_url}`);
+
+						//если личные данные не получены то берем первые несколько букв айди
+						if (my_data.name=="" || my_data.name=='')
+							my_data.name=my_data.uid.substring(0,5);
+
+						help_obj.process_results();
+
+					}).catch((err)=>{
+
+						//загружаем из локального хранилища если нет авторизации в яндексе
+						help_obj.local();
+
+					})
 				}
 			},
 
