@@ -2,7 +2,7 @@ var M_WIDTH=450, M_HEIGHT=800;
 var app, game_res, objects={}, state="", game_tick=0, git_src, user_data=0;
 var h_state=0, game_platform="", hidden_state_start = 0;
 var rus_let = 'ЙЦУКЕНГШЩЗХФЫВАПРОЛДЖЭЯЧСМИТЬБЮ';
-
+var titles = ['Бомж','Алкаш','Дворник','Охранник','Техник','Младший инженер','Ведущий инженер','Аналитик','Эксперт','Начальник отдела','Начальник управления','Начальник Департамента','Технический директор','Генеральный директор','Заместитель Министра','Премьер Министр','Президент'];
 var my_data={opp_id : ''};
 
 var some_process = {};
@@ -23,7 +23,7 @@ class lb_player_card_class extends PIXI.Container{
 		this.bcg.pointerout=function(){this.tint=0xffffff};
 
 
-		this.place=new PIXI.BitmapText("", {fontName: 'mfont',fontSize: 25});
+		this.place=new PIXI.BitmapText("", {fontName: 'Murecho',fontSize: 25});
 		this.place.tint=0xffff00;
 		this.place.x=20;
 		this.place.y=22;
@@ -34,13 +34,13 @@ class lb_player_card_class extends PIXI.Container{
 		this.avatar.width=this.avatar.height=48;
 
 
-		this.name=new PIXI.BitmapText('', {fontName: 'mfont',fontSize: 25});
+		this.name=new PIXI.BitmapText('', {fontName: 'Murecho',fontSize: 25});
 		this.name.tint=0xdddddd;
 		this.name.x=105;
 		this.name.y=22;
 
 
-		this.rating=new PIXI.BitmapText('', {fontName: 'mfont',fontSize: 25});
+		this.rating=new PIXI.BitmapText('', {fontName: 'Murecho',fontSize: 25});
 		this.rating.x=340;
 		this.rating.tint=0xffffff;
 		this.rating.y=22;
@@ -67,8 +67,7 @@ class cell_class extends PIXI.Container {
 		this.letter.anchor.set(0.5,0.5);
 		this.letter.x = 37;
 		this.letter.y = 37;
-		
-		
+				
 		this.addChild(this.bcg, this.bcg2, this.letter);	
 		
 	}
@@ -77,6 +76,50 @@ class cell_class extends PIXI.Container {
 
 	}
 	
+}
+
+class rank_class extends PIXI.Container {
+	
+	constructor(t_col) {
+		
+		super();
+		this.indicator = new PIXI.Sprite(gres.grade_level0.texture);
+		this.indicator.x = 5;
+		
+		this.s_pos = [-70, 50, 170, 290, 410];		
+		
+		this.title = new PIXI.BitmapText('', {fontName: 'Murecho',fontSize: 23});
+		this.title.x=55;
+		this.title.y=42;
+		this.title.tint = t_col;
+		this.title.maxWidth = 110;
+		this.title.align = 'center';
+		this.title.anchor.set(0.5,0);
+		this.addChild(this.indicator, this.title);
+		//this.mask = objects.title_mask;
+		
+		this.y = 290;
+		
+	}
+	
+	update(pos, lev, stars) {
+		
+		if (lev < 0 || lev >= titles.length) {
+			this.visible=false;
+			return;			
+		}
+		
+		this.visible = true;
+		
+		if (pos!==null)
+		this.x = this.s_pos[pos];
+		
+		if (lev!==null)
+			this.title.text = titles[lev];	
+
+		
+		this.indicator.texture = gres['grade_level'+stars].texture;		
+	}
 }
 
 class keyboard_class extends PIXI.Container {
@@ -139,7 +182,7 @@ class keyboard_class extends PIXI.Container {
 			key.y = 60;		
 			key.pointerup = function(){game.key_down(rus_let[i]);key.tint=key.base_tint};
 			this.keys.push(key);			
-			let letter = new PIXI.BitmapText(rus_let[i], {fontName: 'mfont',fontSize: 35});
+			let letter = new PIXI.BitmapText(rus_let[i], {fontName: 'Murecho',fontSize: 35});
 			letter.anchor.set(0.5,0.5);
 			letter.x=key.x+20;
 			letter.y=key.y+25;
@@ -155,7 +198,7 @@ class keyboard_class extends PIXI.Container {
 			key.y = 110;		
 			key.pointerup = function(){game.key_down(rus_let[i+11]);key.tint=key.base_tint};
 			this.keys.push(key);
-			let letter = new PIXI.BitmapText(rus_let[i+11], {fontName: 'mfont',fontSize: 35});
+			let letter = new PIXI.BitmapText(rus_let[i+11], {fontName: 'Murecho',fontSize: 35});
 			letter.anchor.set(0.5,0.5);
 			letter.x=key.x+20;
 			letter.y=key.y+25;
@@ -171,7 +214,7 @@ class keyboard_class extends PIXI.Container {
 			key.y = 160;		
 			key.pointerup = function(){game.key_down(rus_let[i+22]);key.tint=key.base_tint};
 			this.keys.push(key);
-			let letter = new PIXI.BitmapText(rus_let[i+22], {fontName: 'mfont',fontSize: 35});
+			let letter = new PIXI.BitmapText(rus_let[i+22], {fontName: 'Murecho',fontSize: 35});
 			letter.anchor.set(0.5,0.5);
 			letter.x=key.x+20;
 			letter.y=key.y+25;
@@ -224,7 +267,7 @@ class keys_class extends PIXI.Container {
 		//this.bcg.pointerout=function(){this.tint=0xffffff};
 		
 
-		this.letter=new PIXI.BitmapText("", {fontName: 'mfont',fontSize: 30});
+		this.letter=new PIXI.BitmapText("", {fontName: 'Murecho',fontSize: 30});
 		this.letter.tint=0xFFFFFF;
 		this.letter.x=20;
 		this.letter.y=20;
@@ -370,7 +413,7 @@ var anim2= {
 			for (let key in params)				
 				obj[key]=params[key][1];			
 			obj.visible=vis_on_end;
-			obj.alpha = 1;
+			//obj.alpha = 1;
 			obj.ready=true;
 			
 			
@@ -409,7 +452,9 @@ var anim2= {
 						s.obj[key]=s.params[key][1];
 					
 					s.obj.visible=s.vis_on_end;
-					s.obj.alpha = 1;
+					if (s.vis_on_end === false)
+						s.obj.alpha = 1;
+
 					s.obj.ready=true;					
 					s.p_resolve('finished');
 					this.slot[i] = null;
@@ -604,15 +649,137 @@ var bm = {
 	
 	p_resolve : 0,
 	
-	add: function(text) {
+	add: async function(text,old_rating, res) {
 				
 		objects.bm_text.text=text;
+		objects.bm_exit.visible=false;
+		objects.bm_ok.visible=false;
 
 		anim2.add(objects.bm_cont,{y:[-180,objects.bm_cont.sy]}, true, 0.6,'easeOutBack');		
+				
+		await this.update_title(old_rating,res);		
+		
+		anim2.add(objects.bm_exit,{scale_x:[0,1]}, true, 0.6,'linear');	
+		anim2.add(objects.bm_ok,{scale_x:[0,1]}, true, 0.6,'linear');	
+				
 				
 		return new Promise(function(resolve, reject){					
 			bm.p_resolve = resolve;	  		  
 		});
+	},
+	
+	update_title : async function(old_rating, res) {
+		
+		
+		if (old_rating >= (titles.length*3 - 1))
+			old_rating = titles.length*3 - 1;
+		
+		let cur_lev = ~~(old_rating/3);
+		let cur_stars = old_rating%3
+		
+		
+		//отображаем текущее состояние
+		objects.rank[0].update(1,cur_lev - 1,3);
+		objects.rank[0].alpha=0.25;
+		objects.rank[0].title.scale_xy=1;
+		
+		objects.rank[1].update(2,cur_lev,cur_stars + 1);
+		objects.rank[1].alpha=1;
+		objects.rank[1].title.scale_xy=1.5;
+		
+		objects.rank[2].update(3,cur_lev + 1,0);
+		objects.rank[2].alpha=0.25;
+		objects.rank[2].title.scale_xy=1;
+		
+		objects.rank[3].visible=false;
+		
+		
+		if (old_rating >= (titles.length*3 - 1))
+			return;
+		
+		
+		await new Promise((resolve, reject) => setTimeout(resolve, 1500));
+		
+		
+		if (res === 'lose') {
+			
+			if (cur_lev === 0) {
+				objects.rank[1].update(null, null, 1);
+				return;				
+			}
+			
+			//добавляем новый блок	
+			objects.rank[3].update(0, cur_lev - 2, 3);
+			objects.rank[3].title.scale_xy=1;
+			
+			gres.lost_title.sound.play();
+			
+			//переставляем
+			if (objects.rank[3].visible === true)
+				anim2.add(objects.rank[3],{x:[-70,50],alpha:[0,0.25]}, true, 0.5,'linear');	
+			
+			if (objects.rank[2].visible === true)
+			anim2.add(objects.rank[2],{x:[290,410],alpha:[0.25,0]}, false, 0.5,'linear');			
+			
+			
+			anim2.add(objects.rank[0],{x:[50,170],alpha:[0.25,1]}, true, 0.5,'linear');
+			anim2.add(objects.rank[0].title,{scale_xy:[1,1.5]}, true, 0.5,'linear');
+			
+			anim2.add(objects.rank[1].title,{scale_xy:[1.5,1]}, true, 0.5,'linear');
+			await anim2.add(objects.rank[1],{x:[170,290],alpha:[1,0.25]}, true, 0.5,'linear');
+
+						
+			//обновляем звезды текущего блок
+			objects.rank[0].update(null, null, 1);
+			objects.rank[1].update(null, null, 0);			
+			
+			
+		}
+		
+		if (res === 'win') {
+			
+			//если новое звание
+			if (cur_stars === 2) {	
+				
+				if (cur_lev === (titles.length-1))
+					return;
+				
+				gres.new_title.sound.play();
+				
+				//добавляем новый блок							
+				objects.rank[3].update(4, cur_lev + 2, 0);	
+				objects.rank[3].title.scale_xy=1;
+								
+				//переставляем		
+				if (objects.rank[3].visible === true)
+				anim2.add(objects.rank[3],{x:[410,290],alpha:[0,0.25]}, true, 0.5,'linear');					
+				
+				if (objects.rank[0].visible === true)
+				anim2.add(objects.rank[0],{x:[50,-70],alpha:[0.25,0]}, false, 0.5,'linear');
+				
+				anim2.add(objects.rank[1],{x:[170,50],alpha:[1,0.25]}, true, 0.5,'linear');
+				anim2.add(objects.rank[1].title,{scale_xy:[1.5,1]}, true, 0.5,'linear');
+				
+				anim2.add(objects.rank[2].title,{scale_xy:[1,1.5]}, true, 0.5,'linear');
+				await anim2.add(objects.rank[2],{x:[290,170],alpha:[0.25,1]}, true, 0.5,'linear');
+				
+				
+				//обновляем звезды текущего блок
+				objects.rank[2].update(null, null, 1);	
+			}
+
+			//если просто больше звезд
+			if (cur_stars !== 2) {		
+				gres.new_star.sound.play();
+				//обновляем звезды текущего блок
+				objects.rank[1].update(null, null, cur_stars + 2);	
+			}
+			
+			
+			
+		}
+			
+		
 	},
 
 	exit : function() {
@@ -647,9 +814,9 @@ var make_text = function (obj, text, max_width) {
 	for (let i=0;i<text.length;i++) {
 
 		let code_id=text.charCodeAt(i);
-		let char_obj=game_res.resources.m2_font.bitmapFont.chars[code_id];
+		let char_obj=gres.Murecho.bitmapFont.chars[code_id];
 		if (char_obj===undefined) {
-			char_obj=game_res.resources.m2_font.bitmapFont.chars[83];
+			char_obj=gres.Murecho.bitmapFont.chars[83];
 			text = text.substring(0, i) + 'S' + text.substring(i + 1);
 		}
 
@@ -666,11 +833,11 @@ var make_text = function (obj, text, max_width) {
 var game = {
 	
 	cur_word: '',
-	cur_level:0,
+	cur_row:0,
 	cur_pos : -1,
 	word:'',	
 	checking:0,
-	max_level:5,
+	rows:1,
 	finished:0,
 	
 	activate: function() {
@@ -687,7 +854,11 @@ var game = {
 		if (punish_rating<0) punish_rating = 0;		
 		firebase.database().ref("players/"+my_data.uid+"/rating").set(punish_rating);
 		
-		objects.header_text.text='Баланс: '+my_data.rating + '$';
+		
+		//отображаем уровень
+		let r = ~~(my_data.rating/3);
+		if (r >= (titles.length-1)) r = titles.length-1;
+		objects.header_text.text='Уровень: '+my_data.rating + ' ('+titles[r] +')';
 		
 		objects.keyboard.visible = true;
 		objects.keyboard.clear();
@@ -699,10 +870,17 @@ var game = {
 		//убираем все буквы
 		this.cur_pos = -1;
 		this.cur_word="";
-		this.cur_level=0;
-		this.checking=0;
-		this.max_level=5;
+		this.cur_row=0;
+		this.checking=0;		
 		this.finished=0;
+		
+		this.rows=6;
+		if (my_data.rating >= 27)
+			this.rows=5;
+		if (my_data.rating >= 33)
+			this.rows=4;
+		if (my_data.rating >= 42)
+			this.rows=3;
 		
 		
 		//показываем бонус
@@ -711,16 +889,17 @@ var game = {
 		else
 			objects.keyboard.bonus_row_button.visible=false;
 			
+		
 				
 		//это главные ячейки
-		for (let c=0;c<30;c++) {
+		for (let c=0;c < this.rows*5;c++) {
 			objects.cells[c].bcg.visible = true;
 			objects.cells[c].bcg2.visible = false;
 			objects.cells[c].letter.text='';
 		}		
 		
 		//дополнительные ячейки пока скрываем
-		for (let c=30;c<35;c++) {
+		for (let c=this.rows*5;c<35;c++) {
 			objects.cells[c].bcg.visible = false;
 			objects.cells[c].bcg2.visible = false;
 			objects.cells[c].letter.text='';
@@ -741,15 +920,13 @@ var game = {
 		await anim2.add(objects.cells_cont,{y:[objects.cells_cont.y,objects.cells_cont.sy-30]}, true, 1,'easeInOutCubic');
 		
 		//дополнительные ячейки пока скрываем
-		for (let c=30;c<35;c++) {			
+		
+		for (let c=this.rows*5;c<(this.rows+1)*5;c++) {			
 			objects.cells[c].bcg.visible = true;
 			anim2.add(objects.cells[c].bcg,{alpha:[0,1]}, true, 1,'linear');
 		}
 			
-		this.max_level=6;
-		
-		
-		
+		this.rows++;
 
 	},
 
@@ -770,8 +947,8 @@ var game = {
 		if (key==='И') {			
 			this.finish('lose');
 			return;
-		}*/
-		
+		}
+		*/
 		
 		if (this.cur_word.length===5) {
 			gres.mm.sound.play();
@@ -782,7 +959,7 @@ var game = {
 		this.cur_word += key;
 		
 		this.cur_pos++;		
-		let _letter = objects.cells[this.cur_level*5+this.cur_pos].letter;
+		let _letter = objects.cells[this.cur_row*5+this.cur_pos].letter;
 		_letter.text = key;
 		anim2.add(_letter,{alpha:[0,1]}, true, 0.25,'linear');
 
@@ -791,12 +968,9 @@ var game = {
 	
 	check : async function () {
 		
-		
 		if (this.checking === 1 || objects.bm_cont.visible===true || this.finished===1)
 			return;
-		
-		
-		
+	
 		gres.click.sound.play();
 		
 		if (this.cur_word.length!==5) {
@@ -810,7 +984,7 @@ var game = {
 			gres.bad_word.sound.play();
 			mm.add("Такого слова нет в словаре");			
 			for (let i = 0 ; i < 5 ; i++)
-				objects.cells[this.cur_level*5+i].letter.text = '';
+				objects.cells[this.cur_row*5+i].letter.text = '';
 			this.cur_pos=-1;
 			this.cur_word='';
 			return;			
@@ -822,13 +996,19 @@ var game = {
 			return;
 		}
 		
+		//проверка достижения конечного уровня
+		if (this.cur_row===(this.rows-1) && this.word !== this.cur_word) {
+			this.finish('lose');
+			return;	
+		}		
+		
 		this.checking = 1;
 		
 		for (let i = 0 ; i < 5 ; i++) {
 			
 			let cur_let = this.cur_word[i];
-			let _bcg = objects.cells[this.cur_level*5+i].bcg;
-			let _bcg2 = objects.cells[this.cur_level*5+i].bcg2;
+			let _bcg = objects.cells[this.cur_row*5+i].bcg;
+			let _bcg2 = objects.cells[this.cur_row*5+i].bcg2;
 			let _key = objects.keyboard.keys[rus_let.indexOf(cur_let)];
 			
 			//определяем совпадение
@@ -866,25 +1046,33 @@ var game = {
 		//это ожидание завершение всех анимаций
 		await anim2.add(objects.id_loup,{alpha:[0.5,1]}, true, 1,'linear');
 		
-		//проверка достижения конечного уровня
-		if (this.cur_level===this.max_level) {
-			this.finish('lose');
-			return;	
-		}
 		
 		this.checking = 0;		
 		this.cur_pos=-1;
 		this.cur_word='';
-		this.cur_level++;
-
+		this.cur_row++;
 		
 	},	
+	
+	get_dropped_rating : function (rating) {
+		
+
+		
+		let lev = ~~(rating/3);
+		lev--;
+		
+		if (lev<0)
+			lev = 0;		
+		return lev*3;
+	
+	},
 	
 	finish: async function(res) {
 		
 	
 		let fin_text='';
 		this.finished=1;
+		let old_rating = my_data.rating;
 		
 		//увеличиваем количество игр
 		my_data.games++;
@@ -895,36 +1083,37 @@ var game = {
 			//увеличиваем рейтинг
 			my_data.rating++;
 			firebase.database().ref("players/"+my_data.uid+"/rating").set(my_data.rating);		
-			fin_text='Отгадали!\nВам начислен 1$\nСыграем еще?';
+			fin_text='Отгадали!\nВаш уровень повышен.\nСыграем еще?';
 		}
 		
 		if (res==='lose') {
 			gres.lose.sound.play();
 			//уменьшаем рейтинг
-			my_data.rating > 0 ? my_data.rating--:0;
+			my_data.rating = this.get_dropped_rating(my_data.rating);
 			firebase.database().ref("players/"+my_data.uid+"/rating").set(my_data.rating);			
-			fin_text='Вы так и не угадали слово '+this.word + '\nзабрали у вас 1$\nМожет еще разок?';
+			fin_text='Вы так и не угадали слово '+this.word + '\nВаш уровень снижен.\nМожет еще разок?';
 		}
-		
-		
+				
 		if (my_data.games%10 === 0) {		
 			my_data.bonus++;
+			gres.bonus.sound.play();
 			mm.add('Вам бонус: +1 ряд (Всего: '+my_data.bonus +')');				
-			firebase.database().ref("players/"+my_data.uid+"/bonus").set(my_data.bonus);	
-			
+			firebase.database().ref("players/"+my_data.uid+"/bonus").set(my_data.bonus);			
 		}
-
-		
+	
 		
 		//обновляем строку рейтинга
-		objects.header_text.text='Баланс: '+my_data.rating +'$';
+		let r = ~~(my_data.rating/3);
+		if (r >= (titles.length-1)) r = titles.length-1;
+		objects.header_text.text='Уровень: '+my_data.rating + ' ('+titles[r] +')';
+		
 		
 		if (game_platform === 'VK')
 			anim2.add(objects.social_cont,{y:[-150,objects.social_cont.sy],alpha:[0,1]}, true, 0.5,'linear');
 		
 		
 		//показыаем диалог
-		res = await bm.add(fin_text);
+		res = await bm.add(fin_text, old_rating, res);
 		
 		if (game_platform === 'VK')
 			anim2.add(objects.social_cont,{y:[objects.social_cont.sy,-150,],alpha:[1,0]}, false, 0.5,'linear');
@@ -959,7 +1148,7 @@ var game = {
 		
 		this.cur_word = this.cur_word.substring(0, this.cur_word.length - 1);
 				
-		let _letter = objects.cells[this.cur_level*5+this.cur_pos].letter;
+		let _letter = objects.cells[this.cur_row*5+this.cur_pos].letter;
 		
 		
 		anim2.add(_letter,{alpha:[1,0]}, false, 0.25,'linear');
@@ -1184,7 +1373,7 @@ var lb = {
 	update: function () {
 		
 		
-		firebase.database().ref("players").orderByChild('record').limitToLast(25).once('value').then((snapshot) => {
+		firebase.database().ref("players").orderByChild('rating').limitToLast(25).once('value').then((snapshot) => {
 
 		if (snapshot.val()===null) {
 			  //console.log("Что-то не получилось получить данные о рейтингах");
@@ -1296,13 +1485,11 @@ var auth = function() {
 					return;
 				}
 
-
 				//-----------ЛОКАЛЬНЫЙ СЕРВЕР--------------------------------
 				if (s.includes("192.168")) {
 					help_obj.debug();
 					return;
 				}
-
 
 				//-----------НЕИЗВЕСТНОЕ ОКРУЖЕНИЕ---------------------------
 				help_obj.unknown();
@@ -1552,7 +1739,9 @@ async function load_user_data() {
 			
 
 		//устанавливаем рейтинг в попап
-		objects.id_rating.text=my_data.rating;
+		let r = ~~(my_data.rating/3);
+		if (r >= (titles.length-1)) r = titles.length-1;
+		objects.id_rating.text=my_data.rating + " (" + titles[r]+")";
 
 		//убираем лупу и ее анимацию
 		objects.id_loup.visible=false;
@@ -1578,7 +1767,7 @@ async function load_user_data() {
 	
 	
 	} catch (error) {		
-		alert (error + ' ' +error.line);		
+		alert (error + ' ' +error.stack);		
 	}
 	
 }
@@ -1704,9 +1893,8 @@ async function load_resources() {
 
 	
 	game_res=new PIXI.Loader();
-	game_res.add("m2_font", git_src+"fonts/Neucha/font.fnt");
-	game_res.add("m3_font", git_src+"fonts/Muffin/font.fnt");
-	
+	game_res.add("Muffin", git_src+"fonts/Muffin/font.fnt");
+	game_res.add("Murecho", git_src+"fonts/Murecho/Murecho.fnt");
 
 	game_res.add('click',git_src+'/sounds/click.mp3');
 	game_res.add('locked',git_src+'/sounds/locked.mp3');
@@ -1717,7 +1905,10 @@ async function load_resources() {
 	game_res.add('key_down',git_src+'/sounds/key_down.mp3');
 	game_res.add('win',git_src+'/sounds/win.mp3');
 	game_res.add('mm',git_src+'/sounds/mm.mp3');
-	
+	game_res.add('bonus',git_src+'/sounds/bonus.mp3');
+	game_res.add('new_star',git_src+'/sounds/new_star.mp3');
+	game_res.add('new_title',git_src+'/sounds/new_title.mp3');
+	game_res.add('lost_title',git_src+'/sounds/lost_title.mp3');
 	
     //добавляем из листа загрузки
     for (var i = 0; i < load_list.length; i++)
