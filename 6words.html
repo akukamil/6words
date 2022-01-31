@@ -33,6 +33,7 @@
 	<th>FirstName</th>
 	<th>Rating</th>
 	<th>Bonus</th>
+	<th>Games</th>
 	<th>tm</th>
   </tr>
 </table>
@@ -82,6 +83,16 @@
 	firebase.database().ref("players").orderByChild('tm').limitToLast(20).on('value',(snapshot) => {
 	
 		players_table.innerHTML='';
+		var newRow = players_table.insertRow();
+		newRow.insertCell(0).appendChild(document.createTextNode('id'));
+		newRow.insertCell(1).appendChild(document.createTextNode('name'));
+		newRow.insertCell(2).appendChild(document.createTextNode('rating'));
+		newRow.insertCell(3).appendChild(document.createTextNode('bonus'));
+		newRow.insertCell(4).appendChild(document.createTextNode('games'));
+		newRow.insertCell(5).appendChild(document.createTextNode('time'));
+		
+		
+		
 		var data=snapshot.val();
 		data = Object.keys(data).map((key) => [
 		key, 
@@ -97,7 +108,7 @@
 		});
 		
 		data.sort(function(a, b){return a[5] - b[5]});
-	
+
 
 		data.forEach(p=>{
 		
