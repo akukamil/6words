@@ -181,6 +181,7 @@ class keyboard_class extends PIXI.Container {
 			key.x = 5 + i*40;
 			key.y = 60;		
 			key.pointerup = function(){game.key_down(rus_let[i]);key.tint=key.base_tint};
+			key.pointerout = function(){key.tint=key.base_tint};
 			this.keys.push(key);			
 			let letter = new PIXI.BitmapText(rus_let[i], {fontName: 'Murecho',fontSize: 35});
 			letter.anchor.set(0.5,0.5);
@@ -197,6 +198,7 @@ class keyboard_class extends PIXI.Container {
 			key.x = 5 + i*40;
 			key.y = 110;		
 			key.pointerup = function(){game.key_down(rus_let[i+11]);key.tint=key.base_tint};
+			key.pointerout = function(){key.tint=key.base_tint};
 			this.keys.push(key);
 			let letter = new PIXI.BitmapText(rus_let[i+11], {fontName: 'Murecho',fontSize: 35});
 			letter.anchor.set(0.5,0.5);
@@ -213,6 +215,7 @@ class keyboard_class extends PIXI.Container {
 			key.x = 5 + (i+1)*40;
 			key.y = 160;		
 			key.pointerup = function(){game.key_down(rus_let[i+22]);key.tint=key.base_tint};
+			key.pointerout = function(){key.tint=key.base_tint};
 			this.keys.push(key);
 			let letter = new PIXI.BitmapText(rus_let[i+22], {fontName: 'Murecho',fontSize: 35});
 			letter.anchor.set(0.5,0.5);
