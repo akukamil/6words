@@ -1103,6 +1103,8 @@ var game = {
 			mm.add('Вам бонус: +1 ряд (Всего: '+my_data.bonus +')');				
 			firebase.database().ref("players/"+my_data.uid+"/bonus").set(my_data.bonus);			
 		}
+		
+		firebase.database().ref("players/"+my_data.uid+"/tm").set(firebase.database.ServerValue.TIMESTAMP);
 	
 		
 		//обновляем строку рейтинга
@@ -1176,7 +1178,7 @@ var game = {
 
 var keep_alive = function() {
 	
-	firebase.database().ref("players/"+my_data.uid+"/tm").set(firebase.database.ServerValue.TIMESTAMP);
+	
 }
 
 var	show_ad = async function(){
@@ -1758,7 +1760,7 @@ async function load_user_data() {
 		document.addEventListener("visibilitychange", vis_change);
 
 		//keep-alive сервис
-		setInterval(function()	{keep_alive()}, 40000);
+		//setInterval(function()	{keep_alive()}, 40000);
 
 		//указываем что актвиность загрузки завершена
 		activity_on=0;
