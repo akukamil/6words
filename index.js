@@ -23,7 +23,7 @@ class lb_player_card_class extends PIXI.Container{
 		this.bcg.pointerout=function(){this.tint=0xffffff};
 
 
-		this.place=new PIXI.BitmapText("", {fontName: 'Murecho',fontSize: 25});
+		this.place=new PIXI.BitmapText("", {fontName: 'comic_sans',fontSize: 25});
 		this.place.tint=0xffff00;
 		this.place.x=20;
 		this.place.y=22;
@@ -34,13 +34,13 @@ class lb_player_card_class extends PIXI.Container{
 		this.avatar.width=this.avatar.height=48;
 
 
-		this.name=new PIXI.BitmapText('', {fontName: 'Murecho',fontSize: 25});
+		this.name=new PIXI.BitmapText('', {fontName: 'comic_sans',fontSize: 25});
 		this.name.tint=0xdddddd;
 		this.name.x=105;
 		this.name.y=22;
 
 
-		this.rating=new PIXI.BitmapText('', {fontName: 'Murecho',fontSize: 25});
+		this.rating=new PIXI.BitmapText('', {fontName: 'comic_sans',fontSize: 25});
 		this.rating.x=340;
 		this.rating.tint=0xffffff;
 		this.rating.y=22;
@@ -88,7 +88,7 @@ class rank_class extends PIXI.Container {
 		
 		this.s_pos = [-70, 50, 170, 290, 410];		
 		
-		this.title = new PIXI.BitmapText('', {fontName: 'Murecho',fontSize: 23});
+		this.title = new PIXI.BitmapText('', {fontName: 'comic_sans',fontSize: 23});
 		this.title.x=55;
 		this.title.y=42;
 		this.title.tint = t_col;
@@ -173,6 +173,7 @@ class keyboard_class extends PIXI.Container {
 		this.bonus_row_button.pointerout = function(){this.bonus_row_button.tint=0xffffff}.bind(this);
 		this.addChild(this.bonus_row_button);
 		
+		let key_font = 'comic_sans';
 		
 		for (let i = 0 ; i < 11 ; i++) {
 			let key = new PIXI.Sprite(gres.key_image.texture);
@@ -183,7 +184,7 @@ class keyboard_class extends PIXI.Container {
 			key.pointerup = function(){game.key_down(rus_let[i]);key.tint=key.base_tint};
 			key.pointerout = function(){key.tint=key.base_tint};
 			this.keys.push(key);			
-			let letter = new PIXI.BitmapText(rus_let[i], {fontName: 'Murecho',fontSize: 35});
+			let letter = new PIXI.BitmapText(rus_let[i], {fontName: key_font,fontSize: 35});
 			letter.anchor.set(0.5,0.5);
 			letter.x=key.x+20;
 			letter.y=key.y+25;
@@ -200,7 +201,7 @@ class keyboard_class extends PIXI.Container {
 			key.pointerup = function(){game.key_down(rus_let[i+11]);key.tint=key.base_tint};
 			key.pointerout = function(){key.tint=key.base_tint};
 			this.keys.push(key);
-			let letter = new PIXI.BitmapText(rus_let[i+11], {fontName: 'Murecho',fontSize: 35});
+			let letter = new PIXI.BitmapText(rus_let[i+11], {fontName: key_font,fontSize: 35});
 			letter.anchor.set(0.5,0.5);
 			letter.x=key.x+20;
 			letter.y=key.y+25;
@@ -217,7 +218,7 @@ class keyboard_class extends PIXI.Container {
 			key.pointerup = function(){game.key_down(rus_let[i+22]);key.tint=key.base_tint};
 			key.pointerout = function(){key.tint=key.base_tint};
 			this.keys.push(key);
-			let letter = new PIXI.BitmapText(rus_let[i+22], {fontName: 'Murecho',fontSize: 35});
+			let letter = new PIXI.BitmapText(rus_let[i+22], {fontName: key_font,fontSize: 35});
 			letter.anchor.set(0.5,0.5);
 			letter.x=key.x+20;
 			letter.y=key.y+25;
@@ -250,42 +251,6 @@ class keyboard_class extends PIXI.Container {
 	}
 		
 
-}
-
-class keys_class extends PIXI.Container {
-		
-	constructor(x,y, id) {
-		super();
-
-		this.key_id = id;
-		this.x=x;
-		this.y=y;
-
-		this.bcg=new PIXI.Sprite(gres.key_image.texture);
-		this.bcg.width=40;
-		this.bcg.height=40;
-		this.bcg.interactive=true;
-		this.bcg.buttonMode = true;
-		//this.bcg.pointerover=function(){this.tint=0x55ffff};
-		//this.bcg.pointerout=function(){this.tint=0xffffff};
-		
-
-		this.letter=new PIXI.BitmapText("", {fontName: 'Murecho',fontSize: 30});
-		this.letter.tint=0xFFFFFF;
-		this.letter.x=20;
-		this.letter.y=20;
-		this.letter.anchor.set(0.5,0.5);
-		
-		this.bcg.pointerdown = this.pointer_down.bind(this);
-
-		this.addChild(this.bcg,this.letter);
-	}	
-	
-	pointer_down () {		
-		let key = this.letter.text;
-		game.key_down.bind(game,key)();
-	}
-	
 }
 
 var anim2= {
@@ -817,9 +782,9 @@ var make_text = function (obj, text, max_width) {
 	for (let i=0;i<text.length;i++) {
 
 		let code_id=text.charCodeAt(i);
-		let char_obj=gres.Murecho.bitmapFont.chars[code_id];
+		let char_obj=gres.comic_sans.bitmapFont.chars[code_id];
 		if (char_obj===undefined) {
-			char_obj=gres.Murecho.bitmapFont.chars[83];
+			char_obj=gres.comic_sans.bitmapFont.chars[83];
 			text = text.substring(0, i) + 'S' + text.substring(i + 1);
 		}
 
@@ -950,8 +915,8 @@ var game = {
 		if (key==='И') {			
 			this.finish('lose');
 			return;
-		}
-		*/
+		}*/
+		
 		
 		if (this.cur_word.length===5) {
 			gres.mm.sound.play();
@@ -1412,7 +1377,7 @@ var lb = {
 					if (players_array[i][0] === undefined) break;	
 					
 					let fname = players_array[i][0];
-					make_text(objects['lb_'+(i+1)+'_name'],fname,180);					
+					make_text(objects['lb_'+(i+1)+'_name'],fname,170);					
 					objects['lb_'+(i+1)+'_balance'].text=players_array[i][1];
 					loader.add('leaders_avatar_'+i, players_array[i][2],{loadType: PIXI.LoaderResource.LOAD_TYPE.IMAGE, timeout: 3000});
 				};
@@ -1898,8 +1863,9 @@ async function load_resources() {
 
 	
 	game_res=new PIXI.Loader();
-	game_res.add("Muffin", git_src+"fonts/Muffin/font.fnt");
-	game_res.add("Murecho", git_src+"fonts/Murecho/Murecho.fnt");
+	game_res.add("muffin", git_src+"fonts/muffin/muffin.fnt");
+	//game_res.add("Murecho", git_src+"fonts/Murecho/Murecho.fnt");
+	game_res.add("comic_sans", git_src+"fonts/comic_sans/comic_sans.fnt");
 
 	game_res.add('click',git_src+'/sounds/click.mp3');
 	game_res.add('locked',git_src+'/sounds/locked.mp3');
