@@ -1858,8 +1858,8 @@ async function load_resources() {
 	document.body.style.color = "red";
 	return;*/
 
-	git_src="https://akukamil.github.io/6words/"
-	//git_src=""
+	//git_src="https://akukamil.github.io/6words/"
+	git_src=""
 
 	
 	game_res=new PIXI.Loader();
