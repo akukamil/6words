@@ -1191,7 +1191,11 @@ var social_dialog = {
 			return;
 		
 		gres.click.sound.play();
-		vkBridge.send('VKWebAppShowWallPostBox', {"message": `Мой результат в игре 6 слов ${my_data.rating}$. Сможешь обогнать меня?`,
+		
+		let r = ~~(my_data.rating/3);
+		if (r >= (titles.length-1)) r = titles.length-1;
+		
+		vkBridge.send('VKWebAppShowWallPostBox', {"message": `Мой уровень в игре 6 слов ${my_data.rating}(${titles[r]}). Сможешь обогнать меня?`,
 		"attachments": "https://vk.com/app8061543"});
 		social_dialog.close();
 	},
