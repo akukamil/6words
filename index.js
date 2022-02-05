@@ -62,8 +62,6 @@ class cell_class extends PIXI.Container {
 		this.bcg = new PIXI.Sprite(gres.cell_bcg.texture);
 		this.bcg2 = new PIXI.Sprite(gres.cell_bcg.texture);
 		this.bcg2.visible=false;
-		this.bcg.alpha = 0.5;
-		this.bcg2.alpha = 0.5;
 	
 		this.letter = new PIXI.BitmapText('', {fontName: 'muffin',fontSize: 60});
 		this.letter.anchor.set(0.5,0.5);
