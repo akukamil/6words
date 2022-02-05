@@ -62,6 +62,8 @@ class cell_class extends PIXI.Container {
 		this.bcg = new PIXI.Sprite(gres.cell_bcg.texture);
 		this.bcg2 = new PIXI.Sprite(gres.cell_bcg.texture);
 		this.bcg2.visible=false;
+		this.bcg.alpha = 0.5;
+		this.bcg2.alpha = 0.5;
 	
 		this.letter = new PIXI.BitmapText('', {fontName: 'muffin',fontSize: 60});
 		this.letter.anchor.set(0.5,0.5);
@@ -807,6 +809,10 @@ var game = {
 	checking:0,
 	rows:1,
 	finished:0,
+	last_bcg_change_time:0,
+	
+	
+	
 	
 	activate: function() {
 		
@@ -857,7 +863,8 @@ var game = {
 		else
 			objects.keyboard.bonus_row_button.visible=false;
 			
-		
+		//отображаем фон
+		this.set_random_image();
 				
 		//это главные ячейки
 		for (let c=0;c < this.rows*5;c++) {
@@ -873,6 +880,27 @@ var game = {
 			objects.cells[c].letter.text='';
 		}	
 	},	
+	
+	set_random_image : async () => {
+		
+		//если прошло мало времени то выходим
+		if ((game_tick - this.last_bcg_change_time)<300) {
+			await anim2.add(objects.random_image,{alpha:[0, 0.25]}, true, 1,'linear');	
+			return;
+		}		
+
+		
+		let loader=new PIXI.Loader();		
+		await new Promise(function(resolve, reject) {			
+			loader.add('puzzle_img', 'https://picsum.photos/450/600?id='+irnd(0,99999999),{loadType: PIXI.LoaderResource.LOAD_TYPE.IMAGE, timeout: 4000});						
+			loader.load(function(l,r) {	resolve(l) });
+		});
+		
+		this.last_bcg_change_time = game_tick;
+		objects.random_image.texture = loader.resources.puzzle_img.texture;
+		await anim2.add(objects.random_image,{alpha:[0, 0.25]}, true, 1,'linear');	
+		
+	},
 	
 	add_bonus_row : async function() {
 		
@@ -1131,6 +1159,7 @@ var game = {
 		
 		anim2.add(objects.cells_cont,{y:[objects.cells_cont.sy,-500],alpha:[1,0]}, false, 0.5,'linear');
 		anim2.add(objects.keyboard,{y:[objects.keyboard.sy,800],alpha:[1,0]}, false, 0.5,'linear');
+		anim2.add(objects.random_image,{alpha:[0.25, 0]}, false, 1,'linear');	
 		await anim2.add(objects.header_cont,{y:[objects.header_cont.sy,-50],alpha:[1,0]}, false, 0.5,'linear');
 		
 	},
