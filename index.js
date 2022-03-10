@@ -1691,6 +1691,10 @@ function resize() {
 
 function vis_change() {
 
+	if (document.hidden === true)
+		PIXI.sound.stopAll();
+
+
 	return;
 	
 	
@@ -1869,6 +1873,7 @@ async function init_game_env() {
 		
 	//загружаем данные об игроке
 	load_user_data();
+		
 		
 	//показыаем основное меню
 	main_menu.activate();
