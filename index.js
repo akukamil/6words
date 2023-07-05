@@ -1789,6 +1789,10 @@ async function init_game_env() {
 	//убираем загрузочные данные
 	document.getElementById("m_bar").outerHTML = "";
 	document.getElementById("m_progress").outerHTML = "";
+	document.body.style.webkitTouchCallout = "none";
+	document.body.style.webkitUserSelect = "none";
+	
+	
 
 	//короткое обращение к ресурсам
 	gres=game_res.resources;
