@@ -890,7 +890,7 @@ var game = {
 		
 		let loader=new PIXI.Loader();		
 		await new Promise(function(resolve, reject) {			
-			loader.add('puzzle_img', 'https://picsum.photos/450/600?id='+irnd(0,99999999),{loadType: PIXI.LoaderResource.LOAD_TYPE.IMAGE, timeout: 4000});						
+			loader.add('puzzle_img', 'https://source.unsplash.com/random/450x600?id='+irnd(0,99999999),{loadType: PIXI.LoaderResource.LOAD_TYPE.IMAGE, timeout: 4000});						
 			loader.load(function(l,r) {	resolve(l) });
 		});
 		
